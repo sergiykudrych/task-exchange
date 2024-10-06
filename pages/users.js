@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import User from '../components/User';
+import MainContainer from '../components/MainContainer';
 const Users = ({ users }) => {
   return (
     <MainContainer>
