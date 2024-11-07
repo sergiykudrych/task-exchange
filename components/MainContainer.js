@@ -2,17 +2,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 
-const MainContainer = ({ children, keywords }) => {
+const MainContainer = ({ children, keywords, title }) => {
   return (
     <>
       <Head>
-        <meta keywords={'sergiy ' + keywords}></meta>
-        <title>Main page</title>
+        <title>{title}</title>
       </Head>
-      <div>
-        <Link href="/users">Users</Link>
-        <Link href="/">Home</Link>
-      </div>
       <div>{children}</div>
     </>
   );

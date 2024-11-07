@@ -1,0 +1,120 @@
+.user-page {
+  background-color: #f7f7f7;
+  padding: 100px 0;
+  @media (max-width: 768px) {
+    padding: 70px 0;
+  }
+}
+.user-page__container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 30px 15px;
+  margin: 0 auto;
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+.user-page__top {
+  display: flex;
+}
+.user-page__image {
+  flex: 0 0 200px;
+  height: 200px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-right: 20px;
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.user-page__info.user-info {
+}
+.user-info__name {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.user-info__item {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--color-dark);
+}
+a.user-info__item {
+  transition: color 0.3s ease 0s;
+  @media (any-hover: hover) {
+    &:hover {
+      color: var(--color-blue);
+    }
+  }
+}
+.user-info__button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  border-radius: 20px;
+  text-align: center;
+  transition: background-color 0.5s ease 0s;
+  font-size: 18px;
+  @media (any-hover: hover) {
+    &:hover {
+      background-color: #5967b7;
+    }
+  }
+}
+.user-page__description {
+  margin-top: 20px;
+  font-size: 18px;
+}
+@media (max-width: 768px) {
+  .user-page__container {
+    padding: 20px 15px;
+  }
+}
+@media (max-width: 500px) {
+  .user-page__image {
+    flex: 0 0 100px;
+    height: 100px;
+  }
+  .user-info__name {
+    font-size: 20px;
+  }
+  .user-info__item {
+    font-size: 14px;
+  }
+  .user-page__description {
+    font-size: 16px;
+  }
+}
+@media (max-width: 425px) {
+  .user-info__button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  .user-info__item {
+    margin-bottom: 5px;
+  }
+}
+@media (max-width: 380px) {
+  .user-page__top {
+    flex-direction: column;
+  }
+  .user-page__image {
+    flex: 0 0 200px;
+    height: 200px;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  .user-info__button {
+    display: inline-block;
+    padding: 15px 20px;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 10px;
+  }
+}

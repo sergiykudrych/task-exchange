@@ -76,3 +76,155 @@ h6 {
   font-weight: 400;
 }
 /*--------------------*/
+:root {
+  --color-dark: #000;
+  --color-white: #fff;
+  --color-green: #2fbf71;
+  --color-blue: #6679e7;
+  --color-red: #ff0000;
+  --color-yellow: #f8ba17;
+  --color-background: #f7f7f7;
+  --h-header: 60px;
+}
+
+/*--------------------*/
+#__next-build-watcher {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+body {
+  /* font-family: 'Montserrat Alternates', sans-serif; */
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  letter-spacing: 1.05px;
+  min-width: 375px;
+}
+body._lock {
+  overflow: hidden;
+  position: relative;
+}
+
+.button {
+  display: inline-block;
+  background-color: transparent;
+  text-align: center;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease 0s;
+}
+.button--big {
+  padding: 15px 30px;
+  font-size: 18px;
+}
+/* Повна кнопка */
+.button--full {
+  border: 1px solid var(--color-green);
+  background-color: var(--color-green);
+  color: var(--color-white);
+}
+
+/* Ховер для повної кнопки */
+@media (any-hover: hover) {
+  .button--full:hover {
+    background-color: #27a05e;
+    border: 1px solid #27a05e;
+  }
+  .button--full.button--disabled:hover {
+    border: 1px solid var(--color-green);
+    background-color: var(--color-green);
+    color: var(--color-white);
+  }
+}
+
+/* Обведена кнопка */
+.button--border {
+  border: 1px solid var(--color-blue);
+  color: var(--color-blue);
+}
+
+/* Ховер для обведеної кнопки */
+@media (any-hover: hover) {
+  .button--border:hover {
+    background-color: var(--color-blue);
+    color: var(--color-white);
+  }
+}
+
+.button--red {
+  border: 1px solid var(--color-red);
+  background-color: var(--color-red);
+  color: var(--color-white);
+}
+@media (any-hover: hover) {
+  .button--red:hover {
+    border: 1px solid#d31212;
+    background-color: #d31212;
+    color: var(--color-white);
+  }
+}
+.loading {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loading img {
+  width: 100px;
+}
+.loading p {
+  font-size: 20px;
+  font-weight: 600;
+}
+.loading-simple {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loading-simple img {
+  width: 50px;
+}
+.loading-simple p {
+  font-size: 20px;
+  font-weight: 600;
+}
+.forbidden {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-background);
+}
+.forbidden__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.forbidden__title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+}
+.footer {
+  padding: 20px 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--color-background);
+}
+.footer__link {
+  color: var(--color-dark);
+  text-decoration: underline;
+}

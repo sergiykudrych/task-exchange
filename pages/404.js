@@ -1,7 +1,8 @@
 import React from 'react';
+import Forbidden from '../components/Forbidden';
 
 const Error = () => {
-  return <div>page Error</div>;
+  return <Forbidden />;
 };
 
 export default Error;

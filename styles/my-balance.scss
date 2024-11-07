@@ -1,0 +1,257 @@
+.payment {
+  padding: 100px 0px;
+  background-color: var(--color-background);
+  min-height: 100vh;
+  @media (max-width: 768px) {
+    padding: 70px 0px;
+  }
+}
+.payment__container {
+  background-color: var(--color-white);
+  border-radius: 20px;
+  padding: 50px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  @media (max-width: 900px) {
+    padding: 30px 15px;
+  }
+}
+.payment__title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.payment__body-tab {
+}
+.payment__buttons-tab {
+  display: flex;
+  gap: 10px;
+}
+.payment__button-tab-item {
+  margin-top: 20px;
+  border-bottom: 5px solid transparent;
+  background-color: transparent;
+  font-size: 20px;
+  font-weight: 600;
+  &.active-button {
+    border-bottom: 5px solid var(--color-dark);
+  }
+}
+.payment__contents-tab {
+}
+.payment__content-tab-item {
+  display: none;
+}
+.active-button {
+  display: block;
+}
+.active-content {
+  display: block;
+}
+
+.replenish {
+  padding: 20px;
+  border: 1px solid #00000026;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+.replenish__container {
+}
+.replenish__title {
+  font-size: 20px;
+  font-weight: 600;
+}
+.replenish__form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.replenish__body-input {
+}
+.replenish__input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #00000026;
+  border-radius: 10px;
+  padding: 0 15px;
+  margin-top: 5px;
+}
+.replenish__input-message {
+  font-size: 12px;
+  margin-top: 5px;
+  color: gray;
+}
+.replenish__body-button {
+  max-width: 270px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid #00000026;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-top: 5px;
+  color: var(--color-black);
+  font-size: 16px;
+  img {
+    width: 20px;
+  }
+}
+.replenish__button {
+  align-self: start;
+  max-width: 300px;
+  width: 100%;
+}
+
+.withdrawal {
+  padding: 20px;
+  border: 1px solid #00000026;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.withdrawal__title {
+  font-size: 20px;
+  font-weight: 600;
+}
+.withdrawal__form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.withdrawal__body-label {
+}
+.withdrawal__input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #00000026;
+  border-radius: 10px;
+  padding: 0 15px;
+  margin-top: 5px;
+}
+.withdrawal__input-message {
+  font-size: 12px;
+  margin-top: 5px;
+  color: gray;
+}
+.withdrawal--address {
+}
+.withdrawal__body-button {
+  max-width: 270px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid #00000026;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-top: 5px;
+  color: var(--color-black);
+  font-size: 16px;
+  img {
+    width: 20px;
+  }
+}
+.withdrawal__button {
+  align-self: start;
+  max-width: 300px;
+  width: 100%;
+}
+
+.history {
+  margin-top: 20px;
+}
+.history__container {
+  background-color: var(--color-white);
+  border-radius: 20px;
+  padding: 50px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  @media (max-width: 900px) {
+    padding: 30px 15px;
+  }
+}
+.history__title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.history__body {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.history__body-item {
+  border: 1px solid #00000026;
+  border-radius: 20px;
+  padding: 20px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.history__body-id {
+  flex: 0 0 50px;
+}
+.history__body-status {
+  flex: 0 0 132px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.history__body-img {
+  width: 20px;
+}
+.history__body-type {
+  flex: 0 0 97px;
+}
+.history__body-summa--success {
+  color: var(--color-green);
+}
+.history__body-summa--inprocess {
+  color: var(--color-yellow);
+}
+.history__body-summa--error {
+  color: var(--color-red);
+}
+.history__body-date {
+  flex: 1 1 150px;
+  text-align: center;
+}
+.history__body-address {
+  flex: 1 1 170px;
+  text-align: center;
+}
+.history__body-summa {
+  flex: 1 1 80px;
+  text-align: right;
+}
+.history__null {
+  text-align: center;
+  margin-top: 20px;
+}
+@media (max-width: 700px) {
+  .history__body-item {
+    overflow: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .history__body-item p {
+    white-space: nowrap;
+  }
+  .payment__title {
+    font-size: 28px;
+  }
+  .history__title {
+    font-size: 20px;
+  }
+  .replenish__input-message {
+    font-size: 10px;
+  }
+}

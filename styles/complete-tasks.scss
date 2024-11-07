@@ -1,0 +1,29 @@
+.complete-tasks {
+  padding: 100px 0px;
+  background-color: var(--color-background);
+  min-height: 100vh;
+  @media (max-width: 768px) {
+    padding: 70px 0px;
+  }
+}
+.complete-tasks__container {
+  background-color: var(--color-white);
+  border-radius: 20px;
+  padding: 50px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  @media (max-width: 900px) {
+    padding: 30px 15px;
+  }
+}
+.complete-tasks__title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  @media (max-width: 768px) {
+    font-size: 25px;
+  }
+}
+.tasks__loading {
+}
