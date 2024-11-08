@@ -3,7 +3,7 @@ import React from 'react';
 import useUserStore from '../../data/stores/UseUserStore';
 
 const Replenish = () => {
-  const { user, addHistoryBalance } = useUserStore((state) => state);
+  const { user, addHistoryBalance, sendMessageInTelegram } = useUserStore((state) => state);
   const [amount, setAmount] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [messages, setMessages] = React.useState({
@@ -59,6 +59,9 @@ const Replenish = () => {
         address: 'Пополнение баланса',
         methodOfReplenishment: 'Crypto',
       };
+      let title = '<b>Заявка на пополнение баланса </b>\n';
+      let message = '<b>Пользователь:</b> ' + user.name + '\n<b>Сумма:</b> ' + amount + '$' + '\n<b>Hash:</b> ' + response.data.result.uuid;
+      await sendMessageInTelegram(title, message);
       const result = await addHistoryBalance(body);
       if (result.status === 200) {
         setMessages({

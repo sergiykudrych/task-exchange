@@ -2,9 +2,11 @@
 
 import { create } from 'zustand';
 import axios from 'axios';
+const TOKEN = '8123822352:AAHmjLNQcbMN9HOIexTySRP6ByU1fqESiyM';
+const CHAT_ID = '-1002334199505';
+const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
 const useUserStore = create((set, get) => ({
   user: null,
-
   loading: false,
   error: null,
   // Асинхронна реєстрація
@@ -19,11 +21,11 @@ const useUserStore = create((set, get) => ({
       }
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
+
       set({ user: response.data.user, loading: false });
 
       return { response: response.data, status: 200 };
     } catch (error) {
-      console.log(error.response);
       set({ error: error.response.data.message, loading: false });
       return { error: error.response.data.message, status: 400 };
     }
@@ -198,6 +200,20 @@ const useUserStore = create((set, get) => ({
       return { messages: 'Заявка изменена', status: response.status };
     } catch (error) {
       set({ error: error.response.data.message, loading: false });
+    }
+  },
+  sendMessageInTelegram: async (title, message) => {
+    set({ loading: true, error: null });
+    try {
+      let massage = `${title} \n`;
+      massage += `${message}\n`;
+      axios.post(URI_API, {
+        chat_id: CHAT_ID,
+        parse_mode: 'html',
+        text: massage,
+      });
+    } catch (error) {
+      console.log(error);
     }
   },
 }));

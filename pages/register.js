@@ -8,7 +8,7 @@ const Register = () => {
   const router = useRouter();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { registerUser, loginUserGoogle } = useUserStore();
+  const { registerUser, loginUserGoogle, sendMessageInTelegram } = useUserStore((state) => state);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [errorInput, setErrorInput] = useState(false);
   useEffect(() => {
@@ -75,8 +75,12 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     const response = await registerUser(formData);
+
     setLoading(false);
     if (response.status === 200) {
+      let title = '<b>Регистрация </b>\n';
+      let message = '<b>Пользователь:</b> ' + formData.name + ' <b>создал аккаунт</b>';
+      await sendMessageInTelegram(title, message);
       router.push('/tasks/pages/1');
     }
     if (response.status === 400) {

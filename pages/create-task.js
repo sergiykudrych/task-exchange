@@ -26,7 +26,7 @@ const CreateTask = () => {
   const [link, setLink] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [infoCompleted, setInfoCompleted] = React.useState('');
-  const [price, setPrice] = React.useState(1);
+  const [price, setPrice] = React.useState(0);
   const [countCompleted, setCountCompleted] = React.useState(1);
   const [topDay, setTopDay] = React.useState(0);
   const [toPay, setToPay] = React.useState(0);
@@ -322,13 +322,13 @@ const CreateTask = () => {
                     Цена для заказчика: <span>{price}</span>
                   </p>
                   <p className="new-task__total-info-text">
-                    Оплата для исполнителя: <span>{price - 0.1} </span>
+                    Оплата для исполнителя: <span>{price - 0.1 * countCompleted} </span>
                   </p>
                   <p className="new-task__total-info-text">
                     Задание в ТОП дней: <span>{topDay}</span>
                   </p>
                 </div>
-                <h2 className="new-task__body-title">С вашего баланса будет снята сумма: {toPay} $</h2>
+                <h2 className="new-task__body-title">К оплате: {toPay} $</h2>
                 <div className="new-task__body-button">
                   <Link href="/my-tasks" className=" button button--cancel">
                     Отменить

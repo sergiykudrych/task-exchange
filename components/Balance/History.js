@@ -3,7 +3,6 @@ import useUserStore from '../../data/stores/UseUserStore';
 
 const History = () => {
   const user = useUserStore((state) => state.user);
-
   return (
     <div className="history">
       <div className="history__container">

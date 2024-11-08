@@ -59,6 +59,11 @@
   height: 300px;
   resize: none;
 }
+@media (max-width: 400px) {
+  .settings__button {
+    width: 100%;
+  }
+}
 .settings__label-error {
   color: var(--color-red);
   font-size: 12px;

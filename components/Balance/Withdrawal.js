@@ -4,7 +4,7 @@ import useUserStore from '../../data/stores/UseUserStore';
 const Withdrawal = () => {
   const [amount, setAmount] = React.useState(0);
   const [address, setAddress] = React.useState('');
-  const { user, addHistoryBalance } = useUserStore((state) => state);
+  const { user, addHistoryBalance, sendMessageInTelegram } = useUserStore((state) => state);
   const [loading, setLoading] = React.useState(false);
   const [messages, setMessages] = React.useState({
     text: '',
@@ -71,6 +71,9 @@ const Withdrawal = () => {
         address: handleChangeAddress(),
         methodOfReplenishment: 'Crypto',
       };
+      let title = '<b>Заявка на снятие средств </b>\n';
+      let message = '<b>Пользователь:</b> ' + user.name + '\n<b>Сумма:</b> ' + amount + '$' + '\n<b>Address:</b>\n' + address;
+      await sendMessageInTelegram(title, message);
       const result = await addHistoryBalance(body);
       if (result.status === 200) {
         setMessages({
