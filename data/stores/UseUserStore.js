@@ -9,6 +9,22 @@ const useUserStore = create((set, get) => ({
   user: null,
   loading: false,
   error: null,
+  resetPassword: async (email) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/api/reset-password', { email });
+      if (!response.status === 200) {
+        const { message } = await response.json();
+        throw new Error(message || 'Failed to reset password');
+      }
+      set({ loading: false });
+      return { response: response.data.message, status: 200 };
+    } catch (error) {
+      console.log(error);
+      set({ error: error?.response?.data?.message, loading: false });
+      return { error: error?.response?.data?.message, status: 400 };
+    }
+  },
   // Асинхронна реєстрація
   registerUser: async (userData) => {
     set({ loading: true, error: null });

@@ -2,7 +2,7 @@ import React from 'react';
 import useUserStore from '../../data/stores/UseUserStore';
 
 const Withdrawal = () => {
-  const [amount, setAmount] = React.useState(0);
+  const [amount, setAmount] = React.useState('');
   const [address, setAddress] = React.useState('');
   const { user, addHistoryBalance, sendMessageInTelegram } = useUserStore((state) => state);
   const [loading, setLoading] = React.useState(false);

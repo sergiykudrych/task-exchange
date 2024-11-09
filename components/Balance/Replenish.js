@@ -4,7 +4,7 @@ import useUserStore from '../../data/stores/UseUserStore';
 
 const Replenish = () => {
   const { user, addHistoryBalance, sendMessageInTelegram } = useUserStore((state) => state);
-  const [amount, setAmount] = React.useState(0);
+  const [amount, setAmount] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [messages, setMessages] = React.useState({
     text: '',

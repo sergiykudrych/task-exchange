@@ -221,6 +221,9 @@ body._lock {
   text-align: center;
   gap: 5px;
 }
+.forbidden__link {
+  color: var(--color-dark);
+}
 .footer {
   padding: 20px 0;
   text-align: center;

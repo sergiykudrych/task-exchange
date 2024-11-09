@@ -72,19 +72,6 @@
   }
 }
 
-@media (max-width: 900px) {
-  .header-home {
-    .header__buttons .button--full {
-      display: none;
-    }
-    .header__buttons {
-      width: 75px;
-    }
-    .header__logo {
-      width: 75px;
-    }
-  }
-}
 @media (max-width: 710px) {
   .header-home {
     .header__menu__action {
