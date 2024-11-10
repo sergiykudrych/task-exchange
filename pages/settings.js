@@ -4,9 +4,9 @@ import Header from '../components/Works/Header';
 import useUserStore from '../data/stores/UseUserStore';
 import Loading from '../components/Loading';
 import { useRouter } from 'next/router';
-const Settings = () => {
+const Settings = ({ user }) => {
   const router = useRouter();
-  const { user, updateUser, updateUserPassword, activateUser, refreshToken } = useUserStore((state) => state);
+  const { updateUser, updateUserPassword, activateUser } = useUserStore((state) => state);
   const [errorInputName, setErrorInputName] = useState(false);
   const [inputsNew, setInputsNew] = useState(false);
   const [inputOld, setInputOld] = useState(false);
@@ -275,31 +275,6 @@ const Settings = () => {
       });
     }
   };
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) return <Loading />;
   return (

@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 
 import Header from '../components/Works/Header';
 import MainContainer from '../components/MainContainer';
@@ -8,39 +7,11 @@ import Withdrawal from '../components/Balance/Withdrawal';
 import History from '../components/Balance/History';
 import Loading from '../components/Loading';
 
-import useUserStore from '../data/stores/UseUserStore';
-const MyBalance = () => {
-  const router = useRouter();
-  const { user, refreshToken } = useUserStore((state) => state);
+const MyBalance = ({ user }) => {
   const [toggleState, setToggleState] = React.useState(1);
   const toggleTab = (index) => {
     setToggleState(index);
   };
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) return <Loading />;
   return (

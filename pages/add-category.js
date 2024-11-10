@@ -6,10 +6,9 @@ import Header from '../components/Works/Header';
 import useCategoryStore from '../data/stores/UseCategory';
 import Loading from '../components/Loading';
 import useUserStore from '../data/stores/UseUserStore';
-const AddCategory = () => {
+const AddCategory = ({ user }) => {
   const { addCategory, categories, getCategory, removeCategory } = useCategoryStore((state) => state);
 
-  const { user, refreshToken } = useUserStore((state) => state);
   const router = useRouter();
   const [category, setCategory] = useState({
     value: '',
@@ -58,16 +57,6 @@ const AddCategory = () => {
       }, 2000);
     } catch (e) {}
   };
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
   const deleteCategory = async (id) => {
     try {
       await removeCategory(id);
@@ -82,21 +71,7 @@ const AddCategory = () => {
       isMounted = false;
     };
   }, []);
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
   if (!user) return <Loading />;
   if (user.role !== 'ADMIN') {
     return (

@@ -6,9 +6,8 @@ import Header from '../components/Works/Header';
 import Loading from '../components/Loading';
 
 import useUserStore from '../data/stores/UseUserStore';
-const ChangePlan = () => {
-  const router = useRouter();
-  const { user, changePlan, refreshToken } = useUserStore((state) => state);
+const ChangePlan = ({ user }) => {
+  const { changePlan } = useUserStore((state) => state);
   const [messages, setMessages] = React.useState({
     text: '',
     status: '',
@@ -81,31 +80,6 @@ const ChangePlan = () => {
       }
     }
   };
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) return <Loading />;
   return (

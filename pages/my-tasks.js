@@ -1,17 +1,12 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import MainContainer from '../components/MainContainer';
 import Header from '../components/Works/Header';
-import LoadingSimple from '../components/LoadingSimple';
 import Loading from '../components/Loading';
 
-import useUserStore from '../data/stores/UseUserStore';
 import UseTasksStore from '../data/stores/UseTasksStore';
-const MyTasks = () => {
-  const router = useRouter();
-  const { user, refreshToken } = useUserStore((state) => state);
+const MyTasks = ({ user }) => {
   const { getMyTasksAll, tasks, loading } = UseTasksStore((state) => state);
   useEffect(() => {
     const fetchData = async () => {
@@ -19,32 +14,6 @@ const MyTasks = () => {
     };
     fetchData();
   }, [user?.name]);
-
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) return <Loading />;
   return (
@@ -59,7 +28,6 @@ const MyTasks = () => {
                 Создать задачу
               </Link>
             </div>
-            {loading && <LoadingSimple />}
             <ul className="my-task__list">
               {tasks?.length > 0 &&
                 tasks.map((task) => (

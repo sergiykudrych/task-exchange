@@ -64,7 +64,6 @@ const Support = () => {
     try {
       const response = await refreshToken(Token);
       if (response.status === 200) {
-        setIsAuth(true);
         router.push('/feedback');
       }
     } catch (error) {

@@ -23,14 +23,45 @@ import '../styles/successful-payment.scss';
 
 import Head from 'next/head';
 import Script from 'next/script';
+import useUserStore from '../data/stores/UseUserStore';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 const MyApp = ({ Component, pageProps }) => {
+  const { user, refreshToken } = useUserStore((state) => state);
+  const router = useRouter();
+  const handleAuth = async (Token) => {
+    try {
+      const responce = await refreshToken(Token);
+      if (responce.status === 200) {
+        setIsAuth(true);
+      } else {
+        localStorage.removeItem('refreshToken');
+        router.push('/login');
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        handleAuth(refreshToken);
+      } else {
+        router.push('/login');
+      }
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   return (
     <>
       <Head>
         <title>Task Exchange</title>
       </Head>
       <Script src="https://accounts.google.com/gsi/client" strategy="beforeInteractive" />
-      <Component {...pageProps} />
+      <Component {...pageProps} user={user} />
     </>
   );
 };

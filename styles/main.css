@@ -2,10 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  /* margin-top: var(--h-header); */
-  padding-bottom: 0;
-  padding-top: 60px;
+  padding: 0 15px;
   height: 100vh;
 }
 
@@ -73,9 +70,6 @@
   }
   .main-home__container {
     flex-direction: column-reverse;
-  }
-  .main-home {
-    padding-top: 30px;
   }
   .main-home__title {
     font-size: 30px;

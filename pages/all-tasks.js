@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import MainContainer from '../components/MainContainer';
@@ -8,11 +7,8 @@ import LoadingSimple from '../components/LoadingSimple';
 import Loading from '../components/Loading';
 import Forbidden from '../components/Forbidden';
 
-import useUserStore from '../data/stores/UseUserStore';
 import UseTasksStore from '../data/stores/UseTasksStore';
-const AllTasks = () => {
-  const router = useRouter();
-  const { user, refreshToken } = useUserStore((state) => state);
+const AllTasks = ({ user }) => {
   const { getAllTasksAdmin, tasks, loading, changeStatusTask } = UseTasksStore((state) => state);
 
   const [filters, setFilters] = useState({
@@ -74,32 +70,6 @@ const AllTasks = () => {
       (filters.user ? task.user === filters.user : true)
     );
   });
-
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) return <Loading />;
   if (user.role !== 'ADMIN') {

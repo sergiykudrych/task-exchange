@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -8,18 +8,9 @@ import SelectCustom from '../components/CreateTask/Select';
 import Loading from '../components/Loading';
 
 import UseTaskStore from '../data/stores/UseTasksStore';
-import useUserStore from '../data/stores/UseUserStore';
-import useCategoryStore from '../data/stores/UseCategory';
-const CreateTask = () => {
+const CreateTask = ({ user }) => {
   const router = useRouter();
-  const { categories, getCategory } = useCategoryStore((state) => state);
-  const { user, refreshToken } = useUserStore((state) => state);
   const { createTask } = UseTaskStore((state) => state);
-  const [messages, setMessages] = React.useState({
-    text: '',
-    status: '',
-    show: false,
-  });
   const [loading, setLoading] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [category, setCategory] = React.useState('');
@@ -31,6 +22,11 @@ const CreateTask = () => {
   const [topDay, setTopDay] = React.useState(0);
   const [toPay, setToPay] = React.useState(0);
   const [summPrice, setSummPrice] = React.useState(0);
+  const [messages, setMessages] = React.useState({
+    text: '',
+    status: '',
+    show: false,
+  });
 
   React.useEffect(() => {
     const totalPayForCompleted = price * countCompleted;
@@ -180,31 +176,6 @@ const CreateTask = () => {
     }, 500);
     setLoading(false);
   };
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) return <Loading />;
   return (

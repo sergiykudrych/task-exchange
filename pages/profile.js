@@ -1,44 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import MainContainer from '../components/MainContainer';
 import Headers from '../components/Works/Header';
 import Loading from '../components/Loading';
 
-import useUserStore from '../data/stores/UseUserStore';
 // Додаємо назву компонента
-const Profile = () => {
-  const router = useRouter();
-  const { user, refreshToken } = useUserStore((state) => state);
+const Profile = ({ user }) => {
   const [windowWidth, setWindowWidth] = useState(0);
   useEffect(() => {
     setWindowWidth(window.innerWidth);
-  }, []);
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   if (!user) return <Loading />;

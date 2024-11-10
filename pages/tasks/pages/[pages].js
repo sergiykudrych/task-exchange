@@ -13,14 +13,11 @@ import Loading from '../../../components/Loading';
 
 import UseTasksStore from '../../../data/stores/UseTasksStore';
 import UseUserStore from '../../../data/stores/UseUserStore';
-import TopExecutorListSkileton from '../../../components/Tasks/TopExecutorListSkileton';
 
-const tasks = () => {
+const tasks = ({ user }) => {
   const router = useRouter();
   const pageUrl = router.query.pages;
-  const { user, refreshToken } = UseUserStore((state) => state);
   const { getTasksAll, loading } = UseTasksStore((state) => state);
-  const [isAuth, setIsAuth] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [lengthTasks, setLengthTasks] = useState(0);
@@ -56,36 +53,10 @@ const tasks = () => {
       setPage(value);
     }
   }
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) {
     return <Loading />;
   }
-
   return (
     <MainContainer title="Всё задачи">
       <Header />

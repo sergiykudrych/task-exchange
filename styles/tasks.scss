@@ -217,13 +217,9 @@
   .tasks__filter {
     display: flex;
     justify-content: space-between;
-    flex-direction: row;
     flex-wrap: wrap;
     position: static;
     align-items: self-start;
-  }
-  .tasks__filter-block {
-    width: calc(50% - 20px);
   }
   .tasks__filter-reset {
     width: 100%;
