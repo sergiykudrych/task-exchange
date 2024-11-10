@@ -50,7 +50,7 @@
     position: sticky;
     top: calc(10px + var(--h-header));
     @media (max-width: 768px) {
-      height: auto;
+      flex: content;
     }
     &-block {
       width: 100%;
@@ -196,9 +196,7 @@
   .tasks__title {
     font-size: 20px;
   }
-  .tasks__filter {
-    flex: 0 0 200px;
-  }
+
   .tasks__filter-title {
     font-size: 16px;
   }
