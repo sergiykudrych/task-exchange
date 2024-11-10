@@ -49,6 +49,9 @@
     height: min-content;
     position: sticky;
     top: calc(10px + var(--h-header));
+    @media (max-width: 768px) {
+      height: auto;
+    }
     &-block {
       width: 100%;
       display: flex;
