@@ -11,6 +11,7 @@ import Forbidden from '../../components/Forbidden';
 
 const UpdateTask = ({ user }) => {
   const router = useRouter();
+  const { sendMessageInTelegram } = UseUserStore((state) => state);
   const { getTask, updateTask } = UseTasksStore((state) => state);
 
   const [task, setTask] = useState({
@@ -114,6 +115,9 @@ const UpdateTask = ({ user }) => {
     e.preventDefault();
     try {
       const response = await updateTask(task);
+      let title = '<b> Обновление задания </b>\n';
+      let message = 'Пользователь: <b>' + user?.name + '</b> обновил задание <b>' + title + '</b>\n' + process.env.NEXT_PUBLIC_URL + '/all-tasks';
+      await sendMessageInTelegram(title, message);
       setMessages({
         text: response?.data?.message,
         status: response?.data?.status === 200 ? 'success' : 'error',

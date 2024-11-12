@@ -10,6 +10,7 @@ import Loading from '../components/Loading';
 import UseTaskStore from '../data/stores/UseTasksStore';
 const CreateTask = ({ user }) => {
   const router = useRouter();
+  const { sendMessageInTelegram } = useUserStore((state) => state);
   const { createTask } = UseTaskStore((state) => state);
   const [loading, setLoading] = React.useState(false);
   const [title, setTitle] = React.useState('');
@@ -190,6 +191,9 @@ const CreateTask = ({ user }) => {
       dateEnd: nextWeekStr,
       historyCompleted: [],
     };
+    let title = '<b>Добавление задания </b>\n';
+    let message = 'Пользователь: <b>' + user?.name + '</b> добавил задание <b>' + title + '</b>\n' + process.env.NEXT_PUBLIC_URL + '/all-tasks';
+    await sendMessageInTelegram(title, message);
     const response = await createTask({ newTask, toPay });
     setMessages({
       text: response?.data?.message,
