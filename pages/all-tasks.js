@@ -9,7 +9,7 @@ import Forbidden from '../components/Forbidden';
 
 import UseTasksStore from '../data/stores/UseTasksStore';
 const AllTasks = ({ user }) => {
-  const { getAllTasksAdmin, tasks, loading, changeStatusTask } = UseTasksStore((state) => state);
+  const { getAllTasksAdmin, tasks, loading, changeStatusTask, deleteTask } = UseTasksStore((state) => state);
 
   const [filters, setFilters] = useState({
     category: '',
@@ -36,7 +36,24 @@ const AllTasks = ({ user }) => {
       [e.target.name]: e.target.value,
     });
   };
-
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const response = await deleteTask(taskId);
+      setMessages({
+        text: response.data.message,
+        status: response.status === 200 ? 'success' : 'error',
+        show: true,
+      });
+      // Таймер очистки сообщения
+      setTimeout(() => {
+        setMessages({
+          text: '',
+          status: '',
+          show: false,
+        });
+      }, 2000);
+    } catch (error) {}
+  };
   const handleFilterStatusChange = async (e, taskId) => {
     if (e.target.value === '') return;
     try {
@@ -134,6 +151,9 @@ const AllTasks = ({ user }) => {
                       <Link className="my-task__item-pen" href={'/update-task/' + task.id}>
                         <img src="/pen.svg" alt="" />
                       </Link>
+                      <button style={{ cursor: 'pointer', backgroundColor: 'transparent' }} onClick={() => handleDeleteTask(task.id)}>
+                        <img src="/error.svg" alt="" />
+                      </button>
                     </div>
                     <p className="my-task__item-description">{task.description}</p>
                     <Link className="my-task__item-link" href={'/user/' + task.creator}>

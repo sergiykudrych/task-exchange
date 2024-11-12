@@ -116,7 +116,7 @@ const UpdateTask = ({ user }) => {
     try {
       const response = await updateTask(task);
       let title = '<b> Обновление задания </b>\n';
-      let message = 'Пользователь: <b>' + user?.name + '</b> обновил задание <b>\n' + process.env.NEXT_PUBLIC_URL + '/all-tasks';
+      let message = 'Пользователь: <b>' + user?.name + '</b> обновил задание <b>\n' + window.location.origin + '/all-tasks';
       await sendMessageInTelegram(title, message);
       setMessages({
         text: response?.data?.message,
