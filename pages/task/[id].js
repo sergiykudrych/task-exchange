@@ -9,9 +9,9 @@ import UseTasksStore from '../../data/stores/UseTasksStore';
 import useUserStore from '../../data/stores/UseUserStore';
 import Loading from '../../components/Loading';
 // Додаємо назву компонента
-const Task = () => {
+const Task = ({user}) => {
   const router = useRouter();
-  const { user, sendMessages, changeBalance, addTaskInListCompleted, refreshToken } = useUserStore((state) => state);
+  const {  sendMessages, changeBalance, addTaskInListCompleted } = useUserStore((state) => state);
   const [task, setTask] = useState({});
   const { getTask } = UseTasksStore((state) => state);
   const [showRaport, setShowRaport] = useState(true);
@@ -179,31 +179,7 @@ const Task = () => {
     fetchData();
   }, [router.query.id]);
 
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  
 
   if (!user) {
     return <Loading />;

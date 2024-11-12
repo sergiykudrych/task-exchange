@@ -9,10 +9,9 @@ import Loading from '../../components/Loading';
 import Select from 'react-select';
 import Forbidden from '../../components/Forbidden';
 
-const UpdateTask = () => {
+const UpdateTask = ({ user }) => {
   const router = useRouter();
   const { getTask, updateTask } = UseTasksStore((state) => state);
-  const { user, refreshToken } = UseUserStore((state) => state);
 
   const [task, setTask] = useState({
     title: '',
@@ -59,16 +58,9 @@ const UpdateTask = () => {
     setTask({ ...task, description: e });
   };
   const handlerInfoCompleted = (e) => {
-    if (e.length < 50) {
-      document.querySelector('.new-task__button').classList.add('disabled');
-
-      document.querySelector('.new-task__message-info-completed').classList.add('error');
-      document.querySelector('.new-task__textarea-info-completed').classList.add('error');
-    } else {
-      document.querySelector('.new-task__button').classList.remove('disabled');
-      document.querySelector('.new-task__message-info-completed').classList.remove('error');
-      document.querySelector('.new-task__textarea-info-completed').classList.remove('error');
-    }
+    document.querySelector('.new-task__button').classList.remove('disabled');
+    document.querySelector('.new-task__message-info-completed').classList.remove('error');
+    document.querySelector('.new-task__textarea-info-completed').classList.remove('error');
     setTask({ ...task, infoCompleted: e });
   };
   const [categoryList, setCategoryList] = useState([
@@ -141,31 +133,6 @@ const UpdateTask = () => {
       console.log(e);
     }
   };
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) {
     return <Loading />;
@@ -247,8 +214,7 @@ const UpdateTask = () => {
                     placeholder="Распишите по пунктам, какую информацию пользователь должен оставить в отчёте."
                   ></textarea>
                   <span className="new-task__input-message new-task__message-info-completed">
-                    Напишите какую информацию пользователь должен оставить в отчёте, чтобы вы проверили правильность выполнения задания. Не меньше 50
-                    символов.
+                    Напишите какую информацию пользователь должен оставить в отчёте, чтобы вы проверили правильность выполнения задания.
                   </span>
                 </label>
                 <div className="new-task__body-button">

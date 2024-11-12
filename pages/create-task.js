@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -17,24 +17,19 @@ const CreateTask = ({ user }) => {
   const [link, setLink] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [infoCompleted, setInfoCompleted] = React.useState('');
-  const [price, setPrice] = React.useState(0);
-  const [countCompleted, setCountCompleted] = React.useState(1);
-  const [topDay, setTopDay] = React.useState(0);
-  const [toPay, setToPay] = React.useState(0);
-  const [summPrice, setSummPrice] = React.useState(0);
+  const [price, setPrice] = React.useState('');
+  const [countCompleted, setCountCompleted] = React.useState('');
+  const [topDay, setTopDay] = React.useState('');
+
+  const [priceOneTaskForCreator, setPriceOneTaskForCreator] = useState('');
+  const [countNeedTasks, setCountNeedTasks] = useState('');
+  const [beenInTopDays, setBeenInTopDays] = useState('');
+  const [toPay, setToPay] = React.useState('');
   const [messages, setMessages] = React.useState({
     text: '',
     status: '',
     show: false,
   });
-
-  React.useEffect(() => {
-    const totalPayForCompleted = price * countCompleted;
-    setSummPrice(totalPayForCompleted);
-
-    const totalPay = totalPayForCompleted + topDay;
-    setToPay(totalPay);
-  }, [countCompleted, price, topDay]);
 
   const heandlerNameTask = (e) => {
     if (e.length < 5) {
@@ -73,17 +68,54 @@ const CreateTask = ({ user }) => {
     setDescription(e);
   };
   const handlerInfoCompleted = (e) => {
-    if (e.length < 50) {
-      document.querySelector('.new-task__button').classList.add('disabled');
-
-      document.querySelector('.new-task__message-info-completed').classList.add('error');
-      document.querySelector('.new-task__textarea-info-completed').classList.add('error');
-    } else {
-      document.querySelector('.new-task__button').classList.remove('disabled');
-      document.querySelector('.new-task__message-info-completed').classList.remove('error');
-      document.querySelector('.new-task__textarea-info-completed').classList.remove('error');
-    }
+    document.querySelector('.new-task__button').classList.remove('disabled');
+    document.querySelector('.new-task__message-info-completed').classList.remove('error');
+    document.querySelector('.new-task__textarea-info-completed').classList.remove('error');
     setInfoCompleted(e);
+  };
+
+  const handlerPriceOneTask = (e) => {
+    if (+e.target.value >= 0) {
+      if (+e.target.value === 0.1) {
+        setMessages({
+          text: 'Минимальная цена задачи 0.2 $',
+          status: 'error',
+          show: true,
+        });
+        // Таймер очистки сообщения
+        setTimeout(() => {
+          setMessages({
+            text: '',
+            status: '',
+            show: false,
+          });
+        }, 2000);
+        return;
+      }
+      setPriceOneTaskForCreator(e.target.value);
+      let price = (Number(e.target.value) * Number(countNeedTasks) + Number(beenInTopDays)).toFixed(1);
+      setToPay(price);
+    } else {
+      setPriceOneTaskForCreator(0);
+    }
+  };
+  const handlerCountNeedTasks = (e) => {
+    if (+e.target.value >= 1) {
+      setCountNeedTasks(e.target.value);
+      let price = (Number(e.target.value) * Number(priceOneTaskForCreator) + Number(beenInTopDays)).toFixed(1);
+      setToPay(price);
+    } else {
+      setCountNeedTasks(0);
+    }
+  };
+  const handlerBeenInTopDays = (e) => {
+    if (+e.target.value >= 0) {
+      setBeenInTopDays(e.target.value);
+      let price = (Number(countNeedTasks) * Number(priceOneTaskForCreator) + Number(e.target.value)).toFixed(1);
+      setToPay(price);
+    } else {
+      setBeenInTopDays(0);
+    }
   };
   const handlerCreateTask = async (e) => {
     e.preventDefault();
@@ -130,8 +162,8 @@ const CreateTask = ({ user }) => {
       return futureDate;
     };
     const today = new Date();
-    const nextWeek = new Date(today); // Копируем текущую дату
-    nextWeek.setDate(today.getDate() + 7); // Добавляем 7 дней
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
 
     // Форматируем дату в YYYY-MM-DD
     const nextWeekStr = nextWeek.toISOString().slice(0, 10);
@@ -144,13 +176,13 @@ const CreateTask = ({ user }) => {
       link: link,
       category: category.value,
       categoryLabel: category.label,
-      price: price,
+      price: priceOneTaskForCreator,
       infoCompleted: infoCompleted,
-      inTop: topDay > 0 ? true : false,
-      inTopDays: topDay,
-      topDays: getDate(topDay),
-      priceOneTask: price - 0.1,
-      countTasks: countCompleted,
+      inTop: beenInTopDays > 0 ? true : false,
+      inTopDays: beenInTopDays,
+      topDays: getDate(beenInTopDays),
+      priceOneTask: priceOneTaskForCreator - 0.1,
+      countTasks: countNeedTasks,
       countDone: 0,
       countWait: 0,
       countRefused: 0,
@@ -242,8 +274,7 @@ const CreateTask = ({ user }) => {
                     placeholder="Распишите по пунктам, какую информацию пользователь должен оставить в отчёте."
                   ></textarea>
                   <span className="new-task__input-message new-task__message-info-completed">
-                    Напишите какую информацию пользователь должен оставить в отчёте, чтобы вы проверили правильность выполнения задания. Не меньше 50
-                    символов.
+                    Напишите какую информацию пользователь должен оставить в отчёте, чтобы вы проверили правильность выполнения задания.
                   </span>
                 </label>
                 <h2 className="new-task__body-title">Цена, количество</h2>
@@ -251,35 +282,45 @@ const CreateTask = ({ user }) => {
                   <label className="new-task__body-label">
                     <p>Цена за одно завершенное задание</p>
                     <input
+                      name="priceOneTaskForCreator"
                       className="new-task__input"
-                      type="number"
-                      placeholder="100"
-                      value={price}
-                      onChange={(e) => setPrice(Number(e.target.value))}
+                      type="tel"
+                      placeholder="0"
+                      value={priceOneTaskForCreator || ''}
+                      onChange={handlerPriceOneTask}
                     />
                   </label>
                   <label className="new-task__body-label">
-                    <p>Количество завершенных заданий</p>
+                    <p>Количество заданий</p>
                     <input
+                      name="countNeedTasks"
                       className="new-task__input "
-                      type="number"
-                      placeholder="1"
-                      value={countCompleted}
-                      onChange={(e) => setCountCompleted(Number(e.target.value))}
+                      type="tel"
+                      placeholder="0"
+                      value={countNeedTasks || ''}
+                      onChange={handlerCountNeedTasks}
                     />
                   </label>
                   <label className="new-task__body-label">
                     <p>Итого</p>
-                    <input readOnly className="new-task__input" type="number" placeholder="1" value={summPrice} />
+                    <input
+                      name="summPrice"
+                      readOnly
+                      className="new-task__input"
+                      type="tel"
+                      placeholder="0"
+                      value={(priceOneTaskForCreator * countNeedTasks).toFixed(1) || ''}
+                    />
                   </label>
                   <label className="new-task__body-label">
                     <p>Быть в ТОП 1 день = 1$</p>
                     <input
+                      name="topDay"
                       className="new-task__input"
-                      type="number"
-                      placeholder="К-во дней"
-                      value={topDay}
-                      onChange={(e) => setTopDay(Number(e.target.value))}
+                      type="tel"
+                      placeholder="0"
+                      value={beenInTopDays || ''}
+                      onChange={handlerBeenInTopDays}
                     />
                   </label>
                 </div>
@@ -287,19 +328,20 @@ const CreateTask = ({ user }) => {
                   <h2 className="new-task__body-title">Общая информация</h2>
 
                   <p className="new-task__total-info-text">
-                    Кол. выполнений: <span>{countCompleted}</span>
+                    Цена для заказчика: <span>{priceOneTaskForCreator}</span>
                   </p>
                   <p className="new-task__total-info-text">
-                    Цена для заказчика: <span>{price}</span>
+                    Кол. выполнений: <span>{countNeedTasks}</span>
                   </p>
                   <p className="new-task__total-info-text">
-                    Оплата для исполнителя: <span>{price - 0.1 * countCompleted} </span>
+                    Оплата для исполнителя: <span>{priceOneTaskForCreator > 0 ? priceOneTaskForCreator - 0.1 : 0} </span>
                   </p>
                   <p className="new-task__total-info-text">
-                    Задание в ТОП дней: <span>{topDay}</span>
+                    Задание в ТОП дней: <span>{beenInTopDays}</span>
                   </p>
                 </div>
-                <h2 className="new-task__body-title">К оплате: {toPay} $</h2>
+                <h2 className="new-task__body-title">К оплате: {toPay || 0} $</h2>
+
                 <div className="new-task__body-button">
                   <Link href="/my-tasks" className=" button button--cancel">
                     Отменить

@@ -8,8 +8,6 @@ import useUserStore from '../../data/stores/UseUserStore';
 import { useRouter } from 'next/router';
 
 const User = ({ user }) => {
-  const router = useRouter();
-  const { refreshToken } = useUserStore((state) => state);
   const [windowWidth, setWindowWidth] = useState(0);
   const [online, setOnline] = useState(true);
   const [lastVisitSite, setLastVisitSite] = useState('');
@@ -64,32 +62,6 @@ const User = ({ user }) => {
   useEffect(() => {
     handlerOnline();
   }, [user]);
-
-  const handleAuth = async (Token) => {
-    try {
-      const responce = await refreshToken(Token);
-      if (responce.status === 200) {
-        setIsAuth(true);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        handleAuth(refreshToken);
-      } else {
-        router.push('/login');
-      }
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   if (!user) {
     return <Loading />;
