@@ -284,7 +284,7 @@ const CreateTask = ({ user }) => {
                     <input
                       name="priceOneTaskForCreator"
                       className="new-task__input"
-                      type="tel"
+                      type="number"
                       placeholder="0"
                       value={priceOneTaskForCreator || ''}
                       onChange={handlerPriceOneTask}
