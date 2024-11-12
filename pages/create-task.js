@@ -192,9 +192,10 @@ const CreateTask = ({ user }) => {
       dateEnd: nextWeekStr,
       historyCompleted: [],
     };
-    let title = '<b>Добавление задания </b>\n';
-    let message = 'Пользователь: <b>' + user?.name + '</b> добавил задание <b>' + title + '</b>\n' + process.env.NEXT_PUBLIC_URL + '/all-tasks';
-    await sendMessageInTelegram(title, message);
+    let titleMessages = '<b>Добавление задания </b>\n';
+    let message =
+      'Пользователь: <b>' + user?.name + '</b> добавил задание <b>' + titleMessages + '</b>\n' + process.env.NEXT_PUBLIC_URL + '/all-tasks';
+    await sendMessageInTelegram(titleMessages, message);
     const response = await createTask({ newTask, toPay });
     setMessages({
       text: response?.data?.message,
