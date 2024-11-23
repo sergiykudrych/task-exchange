@@ -4,6 +4,7 @@ import HeaderMain from '../components/Home/HeaderMain';
 import useUserStore from '../data/stores/UseUserStore';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import MessageStatus from '../components/MessageStatus';
 const ForgotPassword = () => {
   const router = useRouter();
   const hash = router.asPath.split('?')[1];
@@ -26,6 +27,11 @@ const ForgotPassword = () => {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setLoadingPassword(true);
+    setMessages({
+      text: 'Смена пароля...',
+      status: 'waiting',
+      show: true,
+    });
     if (password.newPassword.length < 3) {
       setMessages({
         text: 'Минимальная длина пароля 3 символа',
@@ -158,10 +164,7 @@ const ForgotPassword = () => {
             </form>
           </div>
         </section>
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </MainContainer>
     </>
   );

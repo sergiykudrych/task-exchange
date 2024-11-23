@@ -3,6 +3,7 @@ import MainContainer from '../components/MainContainer';
 import Header from '../components/Works/Header';
 import useUserStore from '../data/stores/UseUserStore';
 import Loading from '../components/Loading';
+import MessageStatus from '../components/MessageStatus';
 const SendMessage = ({ user }) => {
   const { sendMessages } = useUserStore((state) => state);
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,11 @@ const SendMessage = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessages({
+      text: 'Отправка сообщения...',
+      status: 'waiting',
+      show: true,
+    });
     const response = await sendMessages(message);
     if (response?.data?.status === 200) {
       setMessage({
@@ -90,10 +96,7 @@ const SendMessage = ({ user }) => {
               <button className="send-message__button button--full button">{loading ? 'Отправка...' : 'Отправить'}</button>
             </form>
           </div>
-          <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-            <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-            <p className="message__popup-text">{messages.text}</p>
-          </div>
+          <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
         </div>
       </MainContainer>
     </>

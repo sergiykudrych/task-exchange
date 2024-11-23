@@ -88,7 +88,7 @@ const tasks = ({ user }) => {
             )}
           </div>
         </div>
-        <Link className="menu__link-button button button--full" href="/create-task">
+        <Link className="menu__link-button  button--full" href="/create-task">
           <img src="/plus-white.svg" alt="" />
         </Link>
       </section>

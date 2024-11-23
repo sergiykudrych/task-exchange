@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -9,25 +9,31 @@ import Loading from '../components/Loading';
 
 import UseTaskStore from '../data/stores/UseTasksStore';
 import useUserStore from '../data/stores/UseUserStore';
+import useCategoryStore from '../data/stores/UseCategory';
+import MessageStatus from '../components/MessageStatus';
 const CreateTask = ({ user }) => {
   const router = useRouter();
   const { sendMessageInTelegram } = useUserStore((state) => state);
   const { createTask } = UseTaskStore((state) => state);
-  const [loading, setLoading] = React.useState(false);
-  const [title, setTitle] = React.useState('');
-  const [category, setCategory] = React.useState('');
-  const [link, setLink] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const [infoCompleted, setInfoCompleted] = React.useState('');
-  const [price, setPrice] = React.useState('');
-  const [countCompleted, setCountCompleted] = React.useState('');
-  const [topDay, setTopDay] = React.useState('');
+  const { getCategory } = useCategoryStore((state) => state);
 
+  const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState({
+    value: '',
+    label: '',
+  });
+  const [link, setLink] = useState('');
+  const [description, setDescription] = useState('');
+  const [infoCompleted, setInfoCompleted] = useState('');
+  const [price, setPrice] = useState('');
+  const [countCompleted, setCountCompleted] = useState('');
+  const [topDay, setTopDay] = useState('');
   const [priceOneTaskForCreator, setPriceOneTaskForCreator] = useState('');
   const [countNeedTasks, setCountNeedTasks] = useState('');
   const [beenInTopDays, setBeenInTopDays] = useState('');
-  const [toPay, setToPay] = React.useState('');
-  const [messages, setMessages] = React.useState({
+  const [toPay, setToPay] = useState('');
+  const [messages, setMessages] = useState({
     text: '',
     status: '',
     show: false,
@@ -71,7 +77,7 @@ const CreateTask = ({ user }) => {
   };
   const handlerInfoCompleted = (e) => {
     document.querySelector('.new-task__button').classList.remove('disabled');
-    document.querySelector('.new-task__message-info-completed').classList.remove('error');
+    // document.querySelector('.new-task__message-info-completed').classList.remove('error');
     document.querySelector('.new-task__textarea-info-completed').classList.remove('error');
     setInfoCompleted(e);
   };
@@ -119,6 +125,34 @@ const CreateTask = ({ user }) => {
       setBeenInTopDays(0);
     }
   };
+
+  const [categories, setCategories] = useState([]);
+  const [categoryError, setCategoryError] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Выберите категорию');
+  const [isSelectActive, setIsSelectActive] = useState(false);
+
+  const getCategories = async () => {
+    try {
+      const response = await getCategory();
+      setCategories(response);
+    } catch (error) {
+      setCategoryError(true);
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const handleSelectToggle = () => {
+    setIsSelectActive((prevState) => !prevState);
+  };
+
+  const handleSelectItemClick = (category) => {
+    setCategory({ value: category.slug, label: category.title });
+    setSelectedCategory(category.title);
+    setIsSelectActive(false);
+  };
   const handlerCreateTask = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -139,7 +173,41 @@ const CreateTask = ({ user }) => {
       }, 2000);
       return;
     }
-    if (user?.balance < toPay) {
+    if (+priceOneTaskForCreator === 0) {
+      setMessages({
+        text: 'Минимальная цена задачи 0.2 $',
+        status: 'error',
+        show: true,
+      });
+      setLoading(false);
+      // Таймер очистки сообщения
+      setTimeout(() => {
+        setMessages({
+          text: '',
+          status: '',
+          show: false,
+        });
+      }, 2000);
+      return;
+    }
+    if (countNeedTasks === 0) {
+      setMessages({
+        text: 'Минимальное количество задач 1',
+        status: 'error',
+        show: true,
+      });
+      setLoading(false);
+      // Таймер очистки сообщения
+      setTimeout(() => {
+        setMessages({
+          text: '',
+          status: '',
+          show: false,
+        });
+      }, 2000);
+      return;
+    }
+    if (user?.balance < toPay || user?.balance <= 0) {
       setMessages({
         text: 'Недостаточно средств',
         status: 'error',
@@ -192,8 +260,10 @@ const CreateTask = ({ user }) => {
       dateEnd: nextWeekStr,
       historyCompleted: [],
     };
+
     let titleMessages = '<b>Добавление задания </b>\n';
-    let message = 'Пользователь: <b>' + user?.name + '</b> добавил задание <b>\n' + window.location.origin + '/all-tasks';
+    let message = 'Пользователь: <b>' + user?.name + '</b> добавил задание\n' + window.location.origin + '/all-tasks';
+
     await sendMessageInTelegram(titleMessages, message);
     const response = await createTask({ newTask, toPay });
     setMessages({
@@ -213,7 +283,6 @@ const CreateTask = ({ user }) => {
     }, 500);
     setLoading(false);
   };
-
   if (!user) return <Loading />;
   return (
     <>
@@ -241,7 +310,25 @@ const CreateTask = ({ user }) => {
                 </label>
                 <label className="new-task__body-label">
                   <p>Категория</p>
-                  <SelectCustom setCategory={setCategory} />
+                  <div className={categoryError ? 'new-task__select error' : 'new-task__select'}>
+                    <div className={`select ${isSelectActive ? 'is-active' : ''}`}>
+                      <div className="select__header" onClick={handleSelectToggle}>
+                        <span className="select__current">{selectedCategory}</span>
+                        <div className="select__icon">&times;</div>
+                      </div>
+
+                      {isSelectActive && (
+                        <div className="select__body">
+                          {categories?.map((category) => (
+                            <div className="select__item" key={category._id} onClick={() => handleSelectItemClick(category)}>
+                              {category.title}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* <SelectCustom setCategory={setCategory} /> */}
                 </label>
                 <label className="new-task__body-label">
                   <p>Ссылка</p>
@@ -264,9 +351,7 @@ const CreateTask = ({ user }) => {
                     className="new-task__textarea new-task__textarea-description"
                     placeholder="Распишите по пунктам, что нужно сделать в вашем задании."
                   ></textarea>
-                  <span className="new-task__input-message new-task__message-description">
-                    Распишите по пунктам, что должен сделать пользователь, не меньше 5 символов.
-                  </span>
+                  <span className="new-task__input-message new-task__message-description">менимум 5 символов.</span>
                 </label>
                 <h2 className="new-task__body-title">Проверка задание</h2>
                 <label className="new-task__body-label">
@@ -278,9 +363,9 @@ const CreateTask = ({ user }) => {
                     className="new-task__textarea new-task__textarea-info-completed"
                     placeholder="Распишите по пунктам, какую информацию пользователь должен оставить в отчёте."
                   ></textarea>
-                  <span className="new-task__input-message new-task__message-info-completed">
+                  {/* <span className="new-task__input-message new-task__message-info-completed">
                     Напишите какую информацию пользователь должен оставить в отчёте, чтобы вы проверили правильность выполнения задания.
-                  </span>
+                  </span> */}
                 </label>
                 <h2 className="new-task__body-title">Цена, количество</h2>
                 <div className="new-task__body-price">
@@ -293,6 +378,7 @@ const CreateTask = ({ user }) => {
                       placeholder="0"
                       value={priceOneTaskForCreator || ''}
                       onChange={handlerPriceOneTask}
+                      required
                     />
                   </label>
                   <label className="new-task__body-label">
@@ -304,6 +390,7 @@ const CreateTask = ({ user }) => {
                       placeholder="0"
                       value={countNeedTasks || ''}
                       onChange={handlerCountNeedTasks}
+                      required
                     />
                   </label>
                   <label className="new-task__body-label">
@@ -315,6 +402,7 @@ const CreateTask = ({ user }) => {
                       type="tel"
                       placeholder="0"
                       value={(priceOneTaskForCreator * countNeedTasks).toFixed(1) || ''}
+                      required
                     />
                   </label>
                   <label className="new-task__body-label">
@@ -351,16 +439,15 @@ const CreateTask = ({ user }) => {
                   <Link href="/my-tasks" className=" button button--cancel">
                     Отменить
                   </Link>
-                  <button className="new-task__button button button--full ">{loading ? 'Загрузка...' : 'Создать задание'}</button>
+                  <button className="new-task__button button button--full " disabled={loading}>
+                    {loading ? 'Загрузка...' : 'Создать задание'}
+                  </button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </MainContainer>
     </>
   );

@@ -8,6 +8,7 @@ import Loading from '../components/Loading';
 import Forbidden from '../components/Forbidden';
 
 import UseTasksStore from '../data/stores/UseTasksStore';
+import MessageStatus from '../components/MessageStatus';
 const AllTasks = ({ user }) => {
   const { getAllTasksAdmin, tasks, loading, changeStatusTask, deleteTask } = UseTasksStore((state) => state);
 
@@ -38,6 +39,11 @@ const AllTasks = ({ user }) => {
   };
   const handleDeleteTask = async (taskId) => {
     try {
+      setMessages({
+        text: 'Удаление задачи...',
+        status: 'waiting',
+        show: true,
+      });
       const response = await deleteTask(taskId);
       setMessages({
         text: response.data.message,
@@ -141,9 +147,6 @@ const AllTasks = ({ user }) => {
                 filteredTasks.map((task) => (
                   <li className={task.inTop ? 'my-task__item my-task__item--top ' : 'my-task__item ' + task.status} key={task.id}>
                     <div className="my-task__item-top">
-                      <div className="my-task__item-icon">
-                        <img src="/star-white.svg" alt="Top task" />
-                      </div>
                       <Link href={'/task/' + task.id} className="my-task__item-link">
                         {task.title}
                       </Link>
@@ -152,7 +155,7 @@ const AllTasks = ({ user }) => {
                         <img src="/pen.svg" alt="" />
                       </Link>
                       <button style={{ cursor: 'pointer', backgroundColor: 'transparent' }} onClick={() => handleDeleteTask(task.id)}>
-                        <img src="/error.svg" alt="" />
+                        <img style={{ width: '20px', height: '20px', maxWidth: '20px', maxHeight: '20px' }} src="/error.svg" alt="" />
                       </button>
                     </div>
                     <p className="my-task__item-description">{task.description}</p>
@@ -195,10 +198,7 @@ const AllTasks = ({ user }) => {
             </ul>
           </div>
         </div>
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </MainContainer>
     </>
   );

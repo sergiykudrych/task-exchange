@@ -19,7 +19,6 @@ const UseTasksStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.delete(process.env.NEXT_PUBLIC_API_URL + '/api/delete-task/' + body);
-
       set({ tasks: response.data.taskAll, loading: false });
       return response;
     } catch (error) {

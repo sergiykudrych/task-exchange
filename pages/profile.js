@@ -11,7 +11,7 @@ const Profile = ({ user }) => {
   useEffect(() => {
     setWindowWidth(window.innerWidth);
   }, []);
-
+  console.log(user);
   if (!user) return <Loading />;
   return (
     <MainContainer title={user?.name}>
@@ -23,16 +23,15 @@ const Profile = ({ user }) => {
               <img src={user?.userImage || '/icon-user.svg'} alt={user?.name} />
             </div>
             <div className="profile__info">
-              <p className="profile__info-nickname">{user?.name}</p>
+              <p className="profile__info-nickname">
+                <i className="profile__info-status-icon dot-user-online"></i>
+                {user?.name}
+              </p>
               <div className="profile__confirmed">
                 <img src={user?.isActivated ? '/confirmed.svg' : '/worning.svg'} alt="" />
                 <p>Email {user?.isActivated ? 'подтвержден' : 'не подтвержден'}</p>
               </div>
 
-              <p className="profile__info-status">
-                <i className="profile__info-status-icon dot-user-online"></i>
-                Online
-              </p>
               <p className="profile__info-date">На сайте с {user?.createdAt}</p>
               <p className="profile__info-plan">
                 Тарифный план: <span>{user?.plan}</span>

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 
 import MainContainer from '../components/MainContainer';
 import Header from '../components/Works/Header';
-import useCategoryStore from '../data/stores/UseCategory';
 import Loading from '../components/Loading';
-import useUserStore from '../data/stores/UseUserStore';
+import MessageStatus from '../components/MessageStatus';
+import Forbidden from '../components/Forbidden';
+
+import useCategoryStore from '../data/stores/UseCategory';
+
 const AddCategory = ({ user }) => {
   const { addCategory, categories, getCategory, removeCategory } = useCategoryStore((state) => state);
 
-  const router = useRouter();
   const [category, setCategory] = useState({
     value: '',
     label: '',
@@ -29,7 +30,7 @@ const AddCategory = ({ user }) => {
     try {
       setMessages({
         text: 'Добавление категории...',
-        status: 'success',
+        status: 'waiting',
         show: true,
       });
       const responce = await addCategory(category);
@@ -128,10 +129,7 @@ const AddCategory = ({ user }) => {
             </div>
           )}
         </div>
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </MainContainer>
     </>
   );

@@ -86,16 +86,13 @@
   & > a {
     color: var(--color-dark);
   }
+  @media (max-width: 400px) {
+    gap: 10px;
+    flex-direction: column-reverse;
+  }
 }
-.new-task__button {
-}
-.new-task__button.disabled {
+
+.new-task__button:disabled {
   opacity: 0.5;
   pointer-events: none;
-}
-.button {
-}
-.button--cancel {
-}
-.button--full {
 }

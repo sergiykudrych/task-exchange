@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import Loading from '../../components/Loading';
 import Select from 'react-select';
 import Forbidden from '../../components/Forbidden';
+import MessageStatus from '../../components/MessageStatus';
 
 const UpdateTask = ({ user }) => {
   const router = useRouter();
@@ -116,7 +117,7 @@ const UpdateTask = ({ user }) => {
     try {
       const response = await updateTask(task);
       let title = '<b> Обновление задания </b>\n';
-      let message = 'Пользователь: <b>' + user?.name + '</b> обновил задание <b>\n' + window.location.origin + '/all-tasks';
+      let message = 'Пользователь: <b>' + user?.name + '</b> обновил задание\n' + window.location.origin + '/all-tasks';
       await sendMessageInTelegram(title, message);
       setMessages({
         text: response?.data?.message,
@@ -231,10 +232,7 @@ const UpdateTask = ({ user }) => {
             </div>
           </div>
         </div>
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </MainContainer>
     </>
   );

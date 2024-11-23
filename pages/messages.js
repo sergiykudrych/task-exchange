@@ -18,6 +18,7 @@ const messages = ({ user }) => {
                   {user?.messages.map((message, index) => (
                     <li className="message__item" key={index}>
                       <div className="message__item-top">
+                        <p className="message__item-time">{message.time}</p>
                         <img
                           src={
                             (message.status === 'error' && '/error.svg') ||
@@ -27,11 +28,10 @@ const messages = ({ user }) => {
                           }
                           alt=""
                         />
-                        <h3 className="message__item-title">{message.title}</h3>
-                        <p className="message__item-time">{message.time}</p>
                       </div>
+                      <h3 className="message__item-title">{message.title}</h3>
 
-                      <p className="message__item-text">{message.text}</p>
+                      <p className="message__item-text" dangerouslySetInnerHTML={{ __html: message.text }}></p>
                     </li>
                   ))}
                 </ul>

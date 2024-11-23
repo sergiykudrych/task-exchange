@@ -5,6 +5,7 @@ import TopExecutorListSkileton from './TopExecutorListSkileton';
 
 import useTopExecutorStore from '../../data/stores/UseTopExecutorStore';
 import useUserStore from '../../data/stores/UseUserStore';
+import MessageStatus from '../MessageStatus';
 
 const TopExecutorList = () => {
   const user = useUserStore((state) => state.user);
@@ -77,7 +78,7 @@ const TopExecutorList = () => {
       try {
         setMessages({
           text: 'Загрузка...',
-          status: 'success',
+          status: 'waiting',
           show: true,
         });
         const response = await addTopExecutor(topExecutorInfo);
@@ -100,6 +101,7 @@ const TopExecutorList = () => {
     setShowAddTopExecutor(!showAddTopExecutor);
     document.querySelector('body').classList.toggle('_lock');
   };
+
   if (!topExecutor) {
     return <TopExecutorListSkileton />;
   }
@@ -130,7 +132,7 @@ const TopExecutorList = () => {
               </div>
               <label htmlFor="" className="top-executor__label">
                 <input
-                  value={topExecutorInfo.name}
+                  value={topExecutorInfo.name || ''}
                   onChange={(e) => setTopExecutorInfo({ ...topExecutorInfo, name: e.target.value })}
                   required
                   className="top-executor__input"
@@ -140,7 +142,7 @@ const TopExecutorList = () => {
               </label>
               <label htmlFor="" className="top-executor__label">
                 <input
-                  value={topExecutorInfo.profession}
+                  value={topExecutorInfo.profession || ''}
                   onChange={(e) => setTopExecutorInfo({ ...topExecutorInfo, profession: e.target.value })}
                   required
                   className="top-executor__input"
@@ -150,7 +152,7 @@ const TopExecutorList = () => {
               </label>
               <label htmlFor="" className="top-executor__label">
                 <input
-                  value={topExecutorInfo.contacts}
+                  value={topExecutorInfo.contacts || ''}
                   onChange={(e) => setTopExecutorInfo({ ...topExecutorInfo, contacts: e.target.value })}
                   required
                   className="top-executor__input"
@@ -160,7 +162,7 @@ const TopExecutorList = () => {
               </label>
               <label htmlFor="" className="top-executor__label">
                 <textarea
-                  value={topExecutorInfo.about}
+                  value={topExecutorInfo.about || ''}
                   onChange={(e) => setTopExecutorInfo({ ...topExecutorInfo, about: e.target.value })}
                   required
                   className="top-executor__textarea"
@@ -172,7 +174,7 @@ const TopExecutorList = () => {
               </label>
               <label htmlFor="" className="top-executor__label">
                 <input
-                  value={topExecutorInfo.site}
+                  value={topExecutorInfo.site || ''}
                   onChange={(e) => setTopExecutorInfo({ ...topExecutorInfo, site: e.target.value })}
                   className="top-executor__input"
                   type="text"
@@ -194,10 +196,7 @@ const TopExecutorList = () => {
               </div>
             </form>
           </div>
-          <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-            <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-            <p className="message__popup-text">{messages.text}</p>
-          </div>
+          <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
         </div>
       )}
     </>

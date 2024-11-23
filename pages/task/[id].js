@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import MainContainer from '../../components/MainContainer';
-import Header from '../../components/Works/Header';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
+import MainContainer from '../../components/MainContainer';
+import Header from '../../components/Works/Header';
+import Loading from '../../components/Loading';
+import MessageStatus from '../../components/MessageStatus';
+import Forbidden from '../../components/Forbidden';
+
 import UseTasksStore from '../../data/stores/UseTasksStore';
 import useUserStore from '../../data/stores/UseUserStore';
-import Loading from '../../components/Loading';
 // Додаємо назву компонента
-const Task = ({user}) => {
+const Task = ({ user }) => {
   const router = useRouter();
-  const {  sendMessages, changeBalance, addTaskInListCompleted } = useUserStore((state) => state);
+  const { sendMessages, changeBalance, addTaskInListCompleted } = useUserStore((state) => state);
   const [task, setTask] = useState({});
   const { getTask } = UseTasksStore((state) => state);
   const [showRaport, setShowRaport] = useState(true);
@@ -44,6 +47,11 @@ const Task = ({user}) => {
     e.preventDefault();
     setLoading(true);
     try {
+      setMessages({
+        text: 'Загрузка...',
+        status: 'waiting',
+        show: true,
+      });
       const complete = {
         id: task.id,
         user: user.name,
@@ -82,7 +90,7 @@ const Task = ({user}) => {
     if (status === 'complete') {
       setMessages({
         text: 'Обновляем...',
-        status: 'success',
+        status: 'waiting',
         show: true,
       });
       const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/api/change-task-complete-status', complete);
@@ -135,7 +143,7 @@ const Task = ({user}) => {
       } else {
         setMessages({
           text: 'Обновляем...',
-          status: 'success',
+          status: 'waiting',
           show: true,
         });
         const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + '/api/change-task-complete-status', complete);
@@ -173,13 +181,15 @@ const Task = ({user}) => {
     const fetchData = async () => {
       if (router.query.id) {
         const result = await getTask({ id: router.query.id });
+        if (!result) {
+          router.push('/404');
+          return;
+        }
         setTask(result);
       }
     };
     fetchData();
   }, [router.query.id]);
-
-  
 
   if (!user) {
     return <Loading />;
@@ -188,6 +198,15 @@ const Task = ({user}) => {
   if (!task.title) {
     return <Loading />;
   }
+  // if (task.status !== 'active') {
+  //   return (
+  //     <MainContainer title={'Страница не найдена'}>
+  //       <Header />
+  //       <Forbidden title={'Страница не найдена'} />
+  //     </MainContainer>
+  //   );
+  // }
+  console.log(task);
   return (
     <MainContainer title={task?.title}>
       <Header />
@@ -228,7 +247,7 @@ const Task = ({user}) => {
                 <p>{task.description}</p>
               </div>
               <div className="task__container-success">
-                <h2>Подтверждение и проверка выполнения</h2>
+                <h2>Подтверждения задания</h2>
                 <p>{task.infoCompleted}</p>
               </div>
               <div className={'task__container-button ' + (!showRaport ? 'task__container-button--hide' : '') + ''}>
@@ -237,6 +256,13 @@ const Task = ({user}) => {
                 </button>
               </div>
               <div className={'task__container-report ' + (showRaport ? 'task__container-report--show' : '')}>
+                <div className="task__container-report--link">
+                  <p>Ссылка на задание</p>
+                  <a target="_blank" href={task.link}>
+                    {task.link}
+                  </a>
+                </div>
+
                 <form onSubmit={heandlerCompleteTask} className="task-complete-raport">
                   <textarea
                     className="task-complete-raport__textarea"
@@ -255,7 +281,9 @@ const Task = ({user}) => {
                   </div>
                   <div className="task-complete-raport__bottom">
                     <input type="file" className="task-complete-raport__file" onChange={handleFileChange} />
-                    <button className="button button--full">Отправить задание</button>
+                    <button className="task-complete-raport__button button button--full" disabled={loading}>
+                      {loading ? 'Загрузка...' : 'Завершить задание'}
+                    </button>
                   </div>
                 </form>
               </div>
@@ -265,9 +293,7 @@ const Task = ({user}) => {
               <div className="check-tasks">
                 <div className="check-tasks__container">
                   <h1 className="check-tasks__title">Ожидают подтверждения</h1>
-                  {loading ? (
-                    <p className="check-tasks__loading">Загрузка...</p>
-                  ) : task?.historyCompleted.length > 0 ? (
+                  {task?.historyCompleted.length > 0 ? (
                     <ul className="check-tasks__list">
                       {task?.historyCompleted?.map((complete) => (
                         <li className="check-tasks__item" key={complete.id}>
@@ -331,13 +357,13 @@ const Task = ({user}) => {
                       ))}
                     </ul>
                   ) : (
-                    <p className="check-tasks__empty">Выполнененых заданий нет</p>
+                    <p className="check-tasks__loading">Нет заданий</p>
                   )}
                 </div>
               </div>
             )}
           </div>
-          {/* {ad.length > 0 && (
+          {/* {ad.length == 0 && (
             <ul className="ad">
               {ad.map((item, index) => (
                 <li className="ad-item" key={index}>
@@ -351,10 +377,7 @@ const Task = ({user}) => {
           )} */}
         </div>
       </div>
-      <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-        <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-        <p className="message__popup-text">{messages.text}</p>
-      </div>
+      <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
     </MainContainer>
   );
 };

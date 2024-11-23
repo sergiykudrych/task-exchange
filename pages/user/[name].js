@@ -76,11 +76,11 @@ const User = ({ user }) => {
               <img src={user?.userImage || '/icon-user.svg'} alt={user?.name} />
             </div>
             <div className="profile__info">
-              <p className="profile__info-nickname">{user?.name}</p>
-              <p className="profile__info-status">
+              <p className="profile__info-nickname">
                 <i className={'profile__info-status-icon' + (online ? ' dot-user-online' : ' dot-user-offline')}></i>
-                {online ? 'Онлайн' : lastVisitSite}
+                {user?.name}
               </p>
+              {!online && <p className="profile__info-status">{lastVisitSite}</p>}
               <p className="profile__info-date">На сайте с {user?.createdAt}</p>
               <p className="profile__info-plan">
                 Тарифный план: <span>{user?.plan}</span>

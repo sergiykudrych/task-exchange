@@ -4,8 +4,8 @@ import Header from '../components/Works/Header';
 import useUserStore from '../data/stores/UseUserStore';
 import Loading from '../components/Loading';
 import { useRouter } from 'next/router';
+import MessageStatus from '../components/MessageStatus';
 const Settings = ({ user }) => {
-  const router = useRouter();
   const { updateUser, updateUserPassword, activateUser } = useUserStore((state) => state);
   const [errorInputName, setErrorInputName] = useState(false);
   const [inputsNew, setInputsNew] = useState(false);
@@ -102,10 +102,16 @@ const Settings = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoadingInfo(true);
+    setMessages({
+      text: 'Данные обновляются...',
+      status: 'waiting',
+      show: true,
+    });
+    // return;
     const response = await updateUser(userInfo);
     if (response.status === 200) {
       setMessages({
-        text: 'Настройки успешно обновлены',
+        text: 'Данные успешно обновлены',
         status: 'success',
         show: true,
       });
@@ -119,7 +125,7 @@ const Settings = ({ user }) => {
     }
     if (response.status === 400) {
       setMessages({
-        text: 'Не удалось обновить настройки',
+        text: 'Не удалось обновить данные',
         status: 'error',
         show: true,
       });
@@ -275,7 +281,7 @@ const Settings = ({ user }) => {
       });
     }
   };
-
+  console.log(user);
   if (!user) return <Loading />;
   return (
     <MainContainer title="Настройки">
@@ -356,7 +362,7 @@ const Settings = ({ user }) => {
               </form>
             </div>
             <br />
-            {user.loginGoogle && (
+            {!user.loginGoogle && (
               <div className="settings__container">
                 <h2 className="settings__title">Смена пароля</h2>
                 <form onSubmit={handleChangePassword} className="settings__form">
@@ -413,10 +419,7 @@ const Settings = ({ user }) => {
             </h1>
           </div>
         )}
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </div>
     </MainContainer>
   );

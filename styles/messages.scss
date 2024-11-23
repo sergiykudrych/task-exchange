@@ -39,6 +39,8 @@
 }
 
 .message__item-top {
+  flex-direction: row-reverse;
+  justify-content: space-between;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -49,9 +51,12 @@
   margin-right: auto;
   @media (max-width: 500px) {
     font-size: 16px;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
 .message__item-time {
@@ -63,4 +68,5 @@
   }
 }
 .message__item-text {
+  line-height: 1.1;
 }

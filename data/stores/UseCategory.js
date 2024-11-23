@@ -9,8 +9,8 @@ const useCategoryStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + '/api/category');
-
       set({ categories: response.data, loading: false });
+      return response.data;
     } catch (error) {
       set({ error: error.response.data.message, loading: false });
     }

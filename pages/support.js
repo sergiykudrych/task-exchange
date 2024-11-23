@@ -6,6 +6,7 @@ import Header from '../components/Home/HeaderMain';
 
 import useFeedbackStore from '../data/stores/UseFeedbackStore';
 import useUserStore from '../data/stores/UseUserStore';
+import MessageStatus from '../components/MessageStatus';
 const Support = () => {
   const router = useRouter();
   const { feedbackSend } = useFeedbackStore((state) => state);
@@ -138,10 +139,7 @@ const Support = () => {
                 <p className="feedback-send__subtitle">В ближайшее время с вами свяжутся</p>
               </div>
             </form>
-            <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-              <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-              <p className="message__popup-text">{messages.text}</p>
-            </div>
+            <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
           </div>
         </div>
       </MainContainer>

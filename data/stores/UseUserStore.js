@@ -126,7 +126,8 @@ const useUserStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.put(process.env.NEXT_PUBLIC_API_URL + '/api/update-user-info', userData, { withCredentials: true });
-
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
       return { response: response, status: 200 };
     } catch (error) {
       return { response: error, status: 400 };

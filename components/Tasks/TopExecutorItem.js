@@ -8,7 +8,7 @@ const TopExecutorItem = ({ user }) => {
         <img src={user.image || '/icon-user.svg'} alt="" />
         <div>
           <Link href={'/user/' + user?.name} className="top-executor__item-name">
-            {user?.name}wdqwd qwdqwdw
+            {user?.name}
           </Link>
           <p className="top-executor__item-profession">{user?.profession}</p>
         </div>

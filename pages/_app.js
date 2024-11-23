@@ -20,6 +20,7 @@ import '../styles/feedback.scss';
 import '../styles/send-messages.scss';
 import '../styles/add-category.scss';
 import '../styles/successful-payment.scss';
+import '../styles/selected.scss';
 
 import Head from 'next/head';
 import Script from 'next/script';

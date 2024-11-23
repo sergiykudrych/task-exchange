@@ -119,6 +119,12 @@ body._lock {
   border-radius: 20px;
   transition: all 0.3s ease 0s;
 }
+@media (max-width: 400px) {
+  .button {
+    max-width: 400px;
+    width: 100%;
+  }
+}
 .button--big {
   padding: 15px 30px;
   font-size: 18px;

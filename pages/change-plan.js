@@ -6,6 +6,7 @@ import Header from '../components/Works/Header';
 import Loading from '../components/Loading';
 
 import useUserStore from '../data/stores/UseUserStore';
+import MessageStatus from '../components/MessageStatus';
 const ChangePlan = ({ user }) => {
   const { changePlan } = useUserStore((state) => state);
   const [messages, setMessages] = React.useState({
@@ -34,7 +35,7 @@ const ChangePlan = ({ user }) => {
       try {
         setMessages({
           text: 'Смена плана...',
-          status: 'success',
+          status: 'waiting',
           show: true,
         });
 
@@ -221,10 +222,7 @@ const ChangePlan = ({ user }) => {
             </ul>
           </div>
         </div>
-        <div className={messages.show ? 'message__popup active' : 'message__popup'}>
-          <img src={messages.status === 'success' ? '/confirmed.svg' : '/error.svg'} alt="" />
-          <p className="message__popup-text">{messages.text}</p>
-        </div>
+        <MessageStatus show={messages.show} status={messages.status} text={messages.text} />
       </MainContainer>
     </>
   );
