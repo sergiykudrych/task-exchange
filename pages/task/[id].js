@@ -74,6 +74,7 @@ const Task = ({ user }) => {
           status: '',
           show: false,
         });
+        router.push('/tasks/pages/1');
       }, 2000);
     } catch (error) {
       console.log(error);

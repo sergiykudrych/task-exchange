@@ -12,7 +12,6 @@ import TopExecutorListBlur from '../../../components/Tasks/TopExecutorListBlur';
 import Loading from '../../../components/Loading';
 
 import UseTasksStore from '../../../data/stores/UseTasksStore';
-import UseUserStore from '../../../data/stores/UseUserStore';
 
 const tasks = ({ user }) => {
   const router = useRouter();
@@ -28,6 +27,7 @@ const tasks = ({ user }) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getTasksAll({ category: selectedCategory, limit, page, price: selectedPrice });
+      console.log(result);
       setLengthTasks(result?.tasksCount);
       setTasks(result?.tasks);
     };
